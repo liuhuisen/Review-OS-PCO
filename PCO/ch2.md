@@ -57,6 +57,35 @@ long长度为机器字长，long long为64位
 
 当执行一个运算时，如果它的一个云算数是有符号的而另一个是无符号的，那么C语言会隐式地将有符号参数强制类型转换为无符号数，并假设这两个数都是非负的，来执行这个运算。
 
+- 如何安全地比较两个无符号数
+
+例1：写一个函数用来判定一个字符串是否比另一个更长。前提是必须使用字符串函数`strlen`，它的声明如下：
+
+```
+/* Prototype for library function strlen */
+size_t strlen(const char *s);
+```
+
+假如我们的答案是这样的：
+
+```
+/* Determine whether string s is longer than string t */
+/* WARNING: This function is buggy */
+int strlonger(char *s, char *t) {
+  return strlen(s) - strlen(t) > 0;
+}
+```
+
+其实上面的函数存在问题，当s的长度小于t的长度时，该函数就会返回错误的结果。因为在头文件`stdio.h`中数据类型`size_t`是定义成`unsigned int`的，所以`strlen`返回结果是无符号的，它们的运算结果也作为无符号处理；而当结果为负数时，就会变成一个很大的无符号数，且大于0。
+
+要想安全地比较，我们可以将上述代码改成：
+
+```
+return strlen(s) > strlen(t);
+```
+
 ## 问题
 
-无
+- 阿贝尔群的概念
+
+- 取模运算与取余运算的区别
