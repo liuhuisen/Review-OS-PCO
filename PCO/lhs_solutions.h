@@ -6,12 +6,17 @@ int tadd_ok(int x,int y)//判断有符号整数加法是否溢出
     int pos_over=x>0&&y>0&&x+y<0;
     return !neg_over&&!pos_over;
 }
+int tadd_ok(int x,int y)
+{
+	int sum=x+y;
+	return !((x<0==y<0)&&(sum<0!=x<0));
+}
 2.32
 tsub_ok(int x,int y)//判断减法是否溢出
 {
 	int sub=x-y;
 	int neg_over=x<0&&y>0&&(sub>=0);
-	int pos_over=x>0&&y<0&&(sub<0);
+	int pos_over=x>=0&&y<0&&(sub<0);
 	return !neg_over&&!pos_over;
 }
 2.35
@@ -99,4 +104,50 @@ B C
 int int_size_is_32()//判断int类型是否为32位
 {
     return !((sizeof(int)<<3)-0x20);
+}
+
+3.22
+int max_int_n_factorial()
+{
+    int n=1;
+    int factorial_n_decrement=1;
+    int factorial_n=1;
+    do
+    {
+        factorial_n_decrement*=n;
+        ++n;
+       factorial_n*=n;
+        if (!(factorial_n/n==factorial_n_decrement))//判断n!是否溢出
+        {
+            break;
+        }
+    } while(1);
+    return n-1;
+}
+3.29
+A
+long sum=0;
+long i=0;
+while (i<10)
+{
+	if (i&1)
+	{
+		continue;
+	}
+	sum+=i;
+	i++;
+}
+存在的问题：会陷入死循环。当i=1时，开始陷入死循环。
+B
+long sum=0;
+long i=0;
+while (i<10)
+{
+	if (i&1)
+	{
+		goto increment;
+	}
+	sum+=i;
+  increment:
+    i++;
 }
